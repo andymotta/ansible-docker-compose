@@ -1,0 +1,6 @@
+---
+- name: install tools
+  apt: name={{item}} state=present
+  with_items:
+    - curl
+  tags: [ 'packages' ]

@@ -1,0 +1,3 @@
+---
+app_version: release-0.03
+vagrant_user_pass: "{{ vagrant_user_pass }}"

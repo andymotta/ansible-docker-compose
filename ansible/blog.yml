@@ -1,0 +1,16 @@
+---
+- hosts: web
+  become: true
+  serial: "50%"
+  pre_tasks:
+  - name: disable server in haproxy
+    shell: echo "disable server backends/{{ inventory_hostname }}" | socat stdio /var/lib/haproxy/stats
+    delegate_to: "{{ item }}"
+    with_items: "{{groups.lb}}"
+  roles:
+    - blog
+  post_tasks:
+  - name: enable server in haproxy
+    shell: echo "enable server backends/{{ inventory_hostname }}" | socat stdio /var/lib/haproxy/stats
+    delegate_to: "{{ item }}"
+    with_items: "{{groups.lb}}"

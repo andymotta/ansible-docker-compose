@@ -1,0 +1,9 @@
+---
+- hosts: all
+  become: true
+  gather_facts: false
+
+- include: control.yml
+- include: webserver.yml
+- include: loadbalancer.yml
+- include: blog.yml

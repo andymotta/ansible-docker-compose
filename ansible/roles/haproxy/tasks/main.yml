@@ -1,0 +1,17 @@
+---
+# tasks file for haproxy
+- name: Download and install haproxy and socat
+  yum: pkg={{ item }} state=latest
+  with_items:
+  - haproxy
+  - socat
+  - httpd-tools
+  tags: [ 'packages' ]
+
+# - name: Enable HAProxy
+#   lineinfile: dest=/etc/default/haproxy regexp="^ENABLED" line="ENABLED=1"
+#   notify: restart haproxy
+
+- name: Configure the haproxy cnf file with hosts
+  template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
+  notify: restart haproxy

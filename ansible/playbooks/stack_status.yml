@@ -1,0 +1,35 @@
+---
+- hosts: control
+  gather_facts: false
+  tasks:
+    - name: verify webserver index response
+      uri: url=http://{{item}} return_content=yes
+      with_items: '{{groups.web}}'
+      register: web_index
+      changed_when: false
+
+    - fail: msg="index failed to return content"
+      when: "'Served by {{item.item}}' not in item.content"
+      with_items: "{{web_index.results}}"
+      changed_when: false
+
+- hosts: web
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: verify nginx service
+      command: service nginx status
+      changed_when: false
+
+    - name: verify nginx is listening on 80
+      wait_for: port=80 timeout=1
+      changed_when: false
+
+- hosts: lb
+  tasks:
+    - name: benchmark webservers on lb
+      changed_when: false
+      command: "ab -n 10000 -c 25 http://{{ ansible_eth0.ipv4.address }}:80/"
+      register: benchmark
+    - debug: msg="{{benchmark.stdout_lines}}"

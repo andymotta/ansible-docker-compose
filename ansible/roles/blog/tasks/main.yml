@@ -1,0 +1,12 @@
+---
+# tasks file for blog
+- name: clean existing website content
+  file: path=/usr/share/nginx/html/ state=absent
+
+- name: deploy website content
+  git: repo=https://github.com/jweissig/episode-47
+       dest=/usr/share/nginx/html/
+       version={{ app_version }}
+
+- name: add hostnames to index.html
+  lineinfile: dest=/usr/share/nginx/html/index.html regexp=.*cover-heading.* line='<p class="lead cover-heading">Served by {{ ansible_hostname }} ({{ ansible_eth0.ipv4.address }})</p>'

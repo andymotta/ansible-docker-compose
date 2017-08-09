@@ -1,0 +1,9 @@
+[lb]
+lb
+
+[web]
+web1
+web2
+
+[control]
+control ansible_connection=local

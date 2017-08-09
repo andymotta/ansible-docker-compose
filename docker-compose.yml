@@ -1,0 +1,33 @@
+control:
+  build: ./env
+  dockerfile: Dockerfile-control
+  hostname: control
+  links:
+    - lb
+    - web1
+    - web2
+  ports:
+    - "2200:22"
+  volumes:
+    - ./ansible:/home/ansible/ansible
+lb:
+  build: ./env
+  hostname: lb
+  links:
+    - web1
+    - web2
+  ports:
+    - "2201:22"
+    - "8001:80"
+web1:
+  build: ./env
+  hostname: web1
+  ports:
+    - "2211:22"
+    - "8081:80"
+web2:
+  build: ./env
+  hostname: web2
+  ports:
+    - "2212:22"
+    - "8082:80"

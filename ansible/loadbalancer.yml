@@ -1,0 +1,5 @@
+---
+- hosts: lb
+  become: true
+  roles:
+    - haproxy
