@@ -1,7 +1,13 @@
 ---
 # tasks file for nginx
-- name: Install RPM from URL
+- name: check if nginx is installed
+  yum:
+    list=nginx
+  register: is_installed
+
+- name: Download RPM from URL
   command: rpm -ivh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm
+  when:  is_installed.results|selectattr("yumstate", "match", "installed")|list|length == 0
 
 - name: Install nginx
   shell: yes '' | yum -y install nginx
@@ -9,7 +15,6 @@
 - name: Install components
   yum: name={{item}} state=installed
   with_items:
-    - nginx
     - git
   tags: [ 'packages' ]
 
